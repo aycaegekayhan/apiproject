@@ -9,6 +9,9 @@
 import UIKit
 
 class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
+    
+    var coinManager = CoinManager()
+    
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1 // pick how many columns in the picker
     }
@@ -38,9 +41,25 @@ class ViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDele
         super.viewDidLoad()
         
         currencyPicker.dataSource = self
-        currencyPicker.delegate = self //
+        currencyPicker.delegate = self
+        coinManager.delegate = self
     }
 
 
+}
+
+extension ViewController: CoinManagerDelegate {
+    
+    func didUpdatePrice(price: String, currency: String) {
+        
+        DispatchQueue.main.async {
+            self.bitcoinLabel.text = price
+            self.currencyLabel.text = currency
+        }
+    }
+    
+    func didFailWithError(error: Error) {
+        print(error)
+    }
 }
 
